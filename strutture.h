@@ -1,19 +1,31 @@
+#ifndef MODULO_I_H
+#define MODULO_I_H
+
 #include <stdlib.h>
-#include <string.h>
 #include <stdarg.h>
+#include <string.h>
+
 #define bool int
 #define false 0
 #define true 1
 #define DIM 100
 
+
+
+/* tipi di dato */
 typedef enum { t_int, t_bool, t_real } typeData;
 
+/* tipi di nodo */
+typedef enum { typeCon, typeId, typeOpr, typeType } nodeEnum;
+
+/* valore generico tra int, double e bool */
 typedef union { 
 	int ivalue; 
 	double rvalue; 
 	bool bvalue; 
 } valueU;
 
+/* entry della tabella */
 typedef struct {
 	char * name;
 	typeData tipo;
@@ -24,45 +36,9 @@ typedef struct {
 	};
 } entry;
 
-extern entry table[];
-extern int size;
-
-
-bool insertVariable(char * n, typeData t, valueU d){
-	if(size >= DIM) return false;
-	
-	table[size].name = n;
-	table[size].tipo = t;
-	switch (t) {
-		case (t_int): table[size].ivalue = d.ivalue;
-			break;
-		case (t_bool): table[size].bvalue = d.bvalue;
-			break;
-		case (t_real): table[size].rvalue = d.rvalue;
-			break;
-	}
-	size++;
-	return true;
-}
-
-entry * cerca(char * var){
-	int i = 0;
-	bool trovato = false;
-	while ( (i<size) && (!trovato) ){
-		int ris = strcmp(table[i].name, var);
-
-		if(ris == 0){
-			trovato = true;
-		} else {
-			i++;
-		}
-	}
-	entry * p = &table[i];
-	return p;
-}
-
-typedef enum { typeCon, typeId, typeOpr, typeType } nodeEnum;
-
+/* entry table */
+entry table[DIM];
+int size = 0;
 
 /* constants */
 typedef struct {
@@ -88,18 +64,31 @@ typedef struct {
 typedef struct {
     int oper;                   /* operator */
     int nops;                   /* number of operands */
-    struct nodeTypeTag **op;	/* operands */
+    struct nodeTypeTag ** op;	/* operands */
 } oprNodeType;
 
-typedef struct nodeTypeTag {
+/* general operators */
+typedef struct nodeTypeTag{
     nodeEnum type;              /* type of node */
     union {
         conNodeType con;        /* constants */
         idNodeType id;          /* identifiers */
         oprNodeType opr;        /* operators */
-        typeNodeType ty;
+        typeNodeType ty;			/* type */
     };
 } nodeType;
+
+
+
+bool insertVariable(char * n, typeData t, valueU d);
+entry * cerca(char * var);
+nodeType * con( valueU d, typeData tipo);
+nodeType * id (char * nome);
+nodeType * tipo(typeData t);
+nodeType * opr(int oper, int nops, ...);
+void yyerror(char *);
+
+#endif
 
 
 

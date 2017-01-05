@@ -42,13 +42,13 @@
      INTEGER = 258,
      BOOL = 259,
      VARIABLE = 260,
-     T_INT = 261,
-     T_REAL = 262,
-     T_BOOL = 263,
-     REAL = 264,
-     WHILE = 265,
-     IF = 266,
-     PRINT = 267,
+     REAL = 261,
+     WHILE = 262,
+     IF = 263,
+     PRINT = 264,
+     T_INT = 265,
+     T_REAL = 266,
+     T_BOOL = 267,
      IFX = 268,
      UMINUS = 269,
      ELSE = 270,
@@ -62,13 +62,13 @@
 #define INTEGER 258
 #define BOOL 259
 #define VARIABLE 260
-#define T_INT 261
-#define T_REAL 262
-#define T_BOOL 263
-#define REAL 264
-#define WHILE 265
-#define IF 266
-#define PRINT 267
+#define REAL 261
+#define WHILE 262
+#define IF 263
+#define PRINT 264
+#define T_INT 265
+#define T_REAL 266
+#define T_BOOL 267
 #define IFX 268
 #define UMINUS 269
 #define ELSE 270
@@ -82,12 +82,12 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 18 "grammar.y"
+#line 9 "grammar.y"
 {
     int iValue;
-    char* sName;
+    char * sName;
     double rValue;
-    nodeType * nPtr;
+    struct nodeTypeTag * nPtr;
 }
 /* Line 1529 of yacc.c.  */
 #line 94 "y.tab.h"

@@ -484,9 +484,9 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "lexer.l"
 #line 2 "lexer.l"
-    #include <stdlib.h>
+    #include <stdio.h>
     #include "y.tab.h"
-
+   
     void yyerror(char *);
 #line 492 "lex.yy.c"
 
