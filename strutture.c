@@ -1,4 +1,5 @@
 #include "strutture.h"
+#include "y.tab.h"
 #include <stdarg.h>
 
 /* entry table */
@@ -107,3 +108,94 @@ nodeType *opr(int oper, int nops, ...){
 
     return p;
 }
+
+
+bool ex(nodeType * p){
+	if(!p) return false;
+	
+	switch (p->type) {
+        case typeCon:       
+            switch (p->con.tipo) {
+                case(t_int):        return p->con.ivalue;
+                case(t_bool):       return p->con.bvalue;
+                case(t_real):       return p->con.rvalue;
+            }
+            break;
+        case typeId:
+        		switch (p->id.index->tipo) {
+                case(t_int):        return p->id.index->ivalue;
+                case(t_bool):       return p->id.index->bvalue;
+                case(t_real):       return p->id.index->rvalue;
+            }
+            break;
+        case typeType: 
+        		/* codice per typeType */
+        		break;
+        case typeOpr:
+            switch (p->opr.oper) {
+                case WHILE:
+                    while(ex(p->opr.op[0]) != 0) ex(p->opr.op[1]);
+                    break;
+                case IF:
+                    if(p->opr.nops > 2){
+                    		if(ex(p->opr.op[0]) != 0) ex(p->opr.op[1]);
+                    		else ex(p->opr.op[2]);
+                    }
+                    else{
+                        if(ex(p->opr.op[0]) != 0) ex(p->opr.op[1]);
+                    }
+                    break;
+                case PRINT:
+                		printf("%d\n", ex(p->opr.op[0]));
+                    break;
+                case '=':
+                    switch(p->opr.op[0]->id.index->tipo){
+				        case(t_int):		p->opr.op[0]->id.index->ivalue = ex(p->opr.op[1]);
+				        case(t_bool):	p->opr.op[0]->id.index->bvalue = ex(p->opr.op[1]);
+				        case(t_real):  	p->opr.op[0]->id.index->rvalue = ex(p->opr.op[1]);
+            			}
+                    break;
+                case UMINUS:
+                    return - ex(p->opr.op[0]);
+                    break;
+                case 'D':
+                		/* codice per creare entry nella tabella */
+                		break;
+                default:
+                    switch (p->opr.oper) {
+                        case'+':
+                            return ex(p->opr.op[0]) + ex(p->opr.op[1]);
+                            break;
+                        case'-':
+                            return ex(p->opr.op[0]) - ex(p->opr.op[1]);
+                            break;
+                        case'*':
+                            return ex(p->opr.op[0]) * ex(p->opr.op[1]);
+                            break;
+                        case'/':
+                            return ex(p->opr.op[0]) / ex(p->opr.op[1]);
+                            break;
+                        case'<':
+                            return ex(p->opr.op[0]) < ex(p->opr.op[1]);
+                            break;
+                        case'>':
+                            return ex(p->opr.op[0]) > ex(p->opr.op[1]);
+                            break;
+                        case GE:
+                            return ex(p->opr.op[0]) >= ex(p->opr.op[1]);
+                            break;
+                        case LE:
+                            return ex(p->opr.op[0]) <= ex(p->opr.op[1]);
+                            break;
+                        case NE:
+                            return ex(p->opr.op[0]) != ex(p->opr.op[1]);
+                            break;
+                        case EQ:
+                            return ex(p->opr.op[0]) == ex(p->opr.op[1]);
+                            break;
+                    }
+            }
+    }
+    return 0;
+}
+

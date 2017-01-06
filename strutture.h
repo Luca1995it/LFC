@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #define bool int
 #define false 0
@@ -80,6 +81,7 @@ nodeType * id (char * nome);
 nodeType * tipo(typeData t);
 nodeType * opr(int oper, int nops, ...);
 void yyerror(char *);
+int ex(nodeType * p);
 
 #endif
 

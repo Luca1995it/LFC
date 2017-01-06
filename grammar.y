@@ -1,5 +1,4 @@
 %{
-    #include <stdio.h>
     #include "strutture.h"
 	int yylex(void);
     void yyerror(char *);
@@ -35,8 +34,8 @@ program:
     ;
 
 function:
-    function stmt				
-    | stmt
+    function stmt				{ ex($2); }
+    | stmt						{ ex($1); }
     ;
 
 expr:  
