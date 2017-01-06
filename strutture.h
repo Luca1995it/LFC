@@ -2,15 +2,12 @@
 #define MODULO_I_H
 
 #include <stdlib.h>
-#include <stdarg.h>
 #include <string.h>
 
 #define bool int
 #define false 0
 #define true 1
 #define DIM 100
-
-
 
 /* tipi di dato */
 typedef enum { t_int, t_bool, t_real } typeData;
@@ -35,10 +32,6 @@ typedef struct {
 		bool bvalue;
 	};
 } entry;
-
-/* entry table */
-entry table[DIM];
-int size = 0;
 
 /* constants */
 typedef struct {

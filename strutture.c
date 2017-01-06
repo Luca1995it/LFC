@@ -1,4 +1,9 @@
 #include "strutture.h"
+#include <stdarg.h>
+
+/* entry table */
+entry table[DIM];
+int size = 0;
 
 bool insertVariable(char * n, typeData t, valueU d){
 	if(size >= DIM) return false;
