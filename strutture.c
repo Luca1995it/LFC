@@ -130,6 +130,7 @@ bool ex(nodeType * p){
             break;
         case typeType: 
         		/* codice per typeType */
+                return p->ty.type;
         		break;
         case typeOpr:
             switch (p->opr.oper) {
@@ -150,7 +151,7 @@ bool ex(nodeType * p){
                     break;
                 case '=':
                     switch(p->opr.op[0]->id.index->tipo){
-				        case(t_int):		p->opr.op[0]->id.index->ivalue = ex(p->opr.op[1]);
+				        case(t_int):	p->opr.op[0]->id.index->ivalue = ex(p->opr.op[1]);
 				        case(t_bool):	p->opr.op[0]->id.index->bvalue = ex(p->opr.op[1]);
 				        case(t_real):  	p->opr.op[0]->id.index->rvalue = ex(p->opr.op[1]);
             			}
@@ -158,9 +159,13 @@ bool ex(nodeType * p){
                 case UMINUS:
                     return - ex(p->opr.op[0]);
                     break;
-                case 'D':
+                case 'D':{
                 		/* codice per creare entry nella tabella */
+                        //dovremmo cercare se esiste già?
+                        valueU tmp;
+                        insertVariable(p->opr.op[1]->id.index->name, p->opr.op[1]->id.index->tipo, tmp);
                 		break;
+                    }
                 default:
                     switch (p->opr.oper) {
                         case'+':
