@@ -10,9 +10,8 @@ entry * insertVariable(char * n){
 	if(size >= DIM) return NULL;
 	
 	table[size].name = n;
-	table[size].rvalue = 0;
 	table[size].defined = false;
-	table[size].tipo = 0;
+	table[size].data = NULL;
 	
 	size++;
 	return &table[size];
@@ -37,7 +36,7 @@ entry * cerca(char * var){
 }
 
 
-nodeType *con( valueU d, typeData tipo){
+nodeType * con(valueU d, typeData tipo){
     nodeType *p;
     /* allocate node space in memory */
     if((p=malloc(sizeof(nodeType))) == NULL){
@@ -45,20 +44,22 @@ nodeType *con( valueU d, typeData tipo){
     }
     /* copy information */
     p->type = typeCon;
-    p->con.tipo = tipo;
+    if((p->con.data = malloc(sizeof(valueU))) == NULL){
+    		yyerror("out of memory");
+    }
+    p->con.data->type = tipo;
     switch (tipo) {
-		case (t_int): p->con.ivalue = d.ivalue;
+		case (t_int):  p->con.data->ivalue = d.ivalue;
 			break;
-		case (t_bool): p->con.bvalue = d.bvalue;
+		case (t_bool): p->con.data->bvalue = d.bvalue;
 			break;
-		case (t_real): p->con.rvalue = d.rvalue;
+		case (t_real): p->con.data->rvalue = d.rvalue;
 			break;
 	}
-
     return p;
 }
 
-nodeType *id (char * nome){
+nodeType * id (char * nome){
     nodeType *p;
     if((p=malloc(sizeof(nodeType))) == NULL){
         yyerror("out of memory");
@@ -71,7 +72,7 @@ nodeType *id (char * nome){
     return p;
 }
 
-nodeType *tipo(typeData t){
+nodeType * tipo(typeData t){
 	nodeType *p;
     if((p=malloc(sizeof(nodeType))) == NULL){
         yyerror("out of memory");
@@ -108,26 +109,16 @@ nodeType *opr(int oper, int nops, ...){
 }
 
 
-bool ex(nodeType * p){
-	if(!p) return false;
-	
+valueU * ex(nodeType * p){
+	if(!p) return NULL;
+	valueU * tmp;
 	switch (p->type) {
         case typeCon:       
-            switch (p->con.tipo) {
-                case(t_int):        return p->con.ivalue;
-                case(t_bool):       return p->con.bvalue;
-                case(t_real):       return p->con.rvalue;
-            }
-            break;
+            return p->con.data;
         case typeId:
-        		switch (p->id.index->tipo) {
-                case(t_int):        return p->id.index->ivalue;
-                case(t_bool):       return p->id.index->bvalue;
-                case(t_real):       return p->id.index->rvalue;
-            }
-            break;
+        		return p->id.index->data;
         case typeType: 
-        		break;
+        		return NULL;
         case typeOpr:
             switch (p->opr.oper) {
                 case WHILE:
@@ -143,23 +134,32 @@ bool ex(nodeType * p){
                     }
                     break;
                 case PRINT:
-                		printf("%d\n", ex(p->opr.op[0]));
+                		tmp = ex(p->opr.op[0]);
+                		switch(tmp->type){
+                			case (t_int):  printf("%d\n",tmp->ivalue);
+							break;
+						case (t_bool): printf("%d\n",tmp->bvalue);
+							break;
+						case (t_real): printf("%f\n",tmp->rvalue);
+							break;
+					}
                     break;
                 case '=':
-                    switch(p->opr.op[0]->id.index->tipo){
-				        case(t_int):	p->opr.op[0]->id.index->ivalue = ex(p->opr.op[1]);
-				        case(t_bool):	p->opr.op[0]->id.index->bvalue = ex(p->opr.op[1]);
-				        case(t_real):  	p->opr.op[0]->id.index->rvalue = ex(p->opr.op[1]);
-            			}
+                    p->opr.op[0]->id.index->data = ex(p->opr.op[1]);
                     break;
                 case UMINUS:
-                    return - ex(p->opr.op[0]);
+                    tmp = ex(p->opr.op[0]);
+                    switch(tmp->type){
+                			case (t_int):  tmp->ivalue = - tmp->ivalue;
+							break;
+						case (t_bool): tmp->bvalue = !tmp->bvalue;
+							break;
+						case (t_real): tmp->rvalue = - tmp->rvalue;
+							break;
+					}
                     break;
-                case 'D': {
-		            	    valueU tmp1;
-		                
+                case 'D':
 		            		break;
-                    }
                 default:
                     switch (p->opr.oper) {
                         case'+':
@@ -195,6 +195,6 @@ bool ex(nodeType * p){
                     }
             }
     }
-    return 0;
+    return NULL;
 }
 
