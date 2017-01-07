@@ -17,31 +17,26 @@ typedef enum { t_int, t_bool, t_real } typeData;
 typedef enum { typeCon, typeId, typeOpr, typeType } nodeEnum;
 
 /* valore generico tra int, double e bool */
-typedef union { 
-	int ivalue; 
-	double rvalue; 
-	bool bvalue; 
+typedef struct { 
+	typeData type;
+	union{
+		int ivalue; 
+		double rvalue; 
+		bool bvalue;
+	};
 } valueU;
 
 /* entry della tabella */
 typedef struct {
 	char * name;
-	typeData tipo;
-	union{
-		int ivalue;
-		double rvalue;
-		bool bvalue;
-	};
+	bool defined;
+	valueU * data;
 } entry;
 
 /* constants */
 typedef struct {
 	typeData tipo;
-	union{
-		int ivalue;
-		double rvalue;
-		bool bvalue;
-	};
+	valueU* data;
 } conNodeType;
 
 /* variables */
@@ -74,14 +69,14 @@ typedef struct nodeTypeTag{
 
 
 
-bool insertVariable(char * n, typeData t, valueU d);
+entry* insertVariable(char * n);
 entry * cerca(char * var);
 nodeType * con( valueU d, typeData tipo);
 nodeType * id (char * nome);
 nodeType * tipo(typeData t);
 nodeType * opr(int oper, int nops, ...);
 void yyerror(char *);
-int ex(nodeType * p);
+valueU* ex(nodeType * p);
 
 #endif
 
