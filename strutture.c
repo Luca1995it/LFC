@@ -6,21 +6,16 @@
 entry table[DIM];
 int size = 0;
 
-bool insertVariable(char * n, typeData t, valueU d){
-	if(size >= DIM) return false;
+entry * insertVariable(char * n){
+	if(size >= DIM) return NULL;
 	
 	table[size].name = n;
-	table[size].tipo = t;
-	switch (t) {
-		case (t_int): table[size].ivalue = d.ivalue;
-			break;
-		case (t_bool): table[size].bvalue = d.bvalue;
-			break;
-		case (t_real): table[size].rvalue = d.rvalue;
-			break;
-	}
+	table[size].rvalue = 0;
+	table[size].defined = false;
+	table[size].tipo = 0;
+	
 	size++;
-	return true;
+	return &table[size];
 }
 
 entry * cerca(char * var){
@@ -35,8 +30,10 @@ entry * cerca(char * var){
 			i++;
 		}
 	}
-	entry * p = &table[i];
-	return p;
+	if (trovato)
+		return &table[i];
+    else
+        return NULL;
 }
 
 
@@ -68,6 +65,9 @@ nodeType *id (char * nome){
     }
     p->type = typeId;
     p->id.index = cerca(nome);
+    if(p->id.index == NULL) {
+    		p->id.index = insertVariable(nome);
+    }
     return p;
 }
 
@@ -104,8 +104,6 @@ nodeType *opr(int oper, int nops, ...){
     }
     va_end(ap); /* MUST be called BEFORE THE FUNCTION TERMINATES. it provides
                  the necessary cleaning functions.*/
-
-
     return p;
 }
 
@@ -129,8 +127,6 @@ bool ex(nodeType * p){
             }
             break;
         case typeType: 
-        		/* codice per typeType */
-                return p->ty.type;
         		break;
         case typeOpr:
             switch (p->opr.oper) {
@@ -159,12 +155,10 @@ bool ex(nodeType * p){
                 case UMINUS:
                     return - ex(p->opr.op[0]);
                     break;
-                case 'D':{
-                		/* codice per creare entry nella tabella */
-                        //dovremmo cercare se esiste già?
-                        valueU tmp;
-                        insertVariable(p->opr.op[1]->id.index->name, p->opr.op[1]->id.index->tipo, tmp);
-                		break;
+                case 'D': {
+		            	    valueU tmp1;
+		                
+		            		break;
                     }
                 default:
                     switch (p->opr.oper) {

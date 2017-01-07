@@ -71,19 +71,19 @@ expr:
     ;
 
 type: 
-    T_INT						    { $$ = tipo(t_int); }
+    T_INT						{ $$ = tipo(t_int); }
     | T_BOOL						{ $$ = tipo(t_bool); }
     | T_REAL						{ $$ = tipo(t_real); }
     ;
 
 stmt: 
     expr ';'								{ $$ = $1; }
-    | '{' function '}'				        { $$ = $2; }
-    | ';'								    { $$ = opr(';',2,NULL,NULL); }
+    | '{' function '}'				    { $$ = $2; }
+    | ';'								{ $$ = opr(';',2,NULL,NULL); }
     | PRINT expr ';'						{ $$ = opr(PRINT,1,$2); }
-    | VARIABLE '=' expr ';'				    { $$ = opr('=',2,id($1),$3); }
-    | type VARIABLE ';'					    { $$ = opr('D',2,$1,id($2)); }
-    | WHILE '(' expr ')' stmt			    { $$ = opr(WHILE,2,$3,$5); }
+    | VARIABLE '=' expr ';'				{ $$ = opr('=',2,id($1),$3); }
+    | type VARIABLE ';'				   	{ $$ = opr('D',2,$1,id($2)); }
+    | WHILE '(' expr ')' stmt			{ $$ = opr(WHILE,2,$3,$5); }
     | IF '(' expr ')' stmt %prec IFX		{ $$ = opr(IF,2,$3,$5); }
     | IF '(' expr ')' stmt ELSE stmt    	{ $$ = opr(IF,3,$3,$5,$7); }
 	;

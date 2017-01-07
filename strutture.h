@@ -26,6 +26,7 @@ typedef union {
 /* entry della tabella */
 typedef struct {
 	char * name;
+	bool defined;
 	typeData tipo;
 	union{
 		int ivalue;
@@ -45,7 +46,7 @@ typedef struct {
 } conNodeType;
 
 /* variables */
-typedef struct {  
+typedef struct {
 	entry * index;     
 } idNodeType;
 
@@ -74,7 +75,7 @@ typedef struct nodeTypeTag{
 
 
 
-bool insertVariable(char * n, typeData t, valueU d);
+entry * insertVariable(char * n);
 entry * cerca(char * var);
 nodeType * con( valueU d, typeData tipo);
 nodeType * id (char * nome);
