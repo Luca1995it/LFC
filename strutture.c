@@ -6,8 +6,6 @@
 entry table[DIM];
 int size = 0;
 
-valueU * tmp, *tmp0, *tmp1;
-
 entry * insertVariable(char * n){
 	if(size >= DIM) return false;
 	
@@ -116,6 +114,10 @@ nodeType *opr(int oper, int nops, ...){
 
 
 valueU* ex(nodeType * p){
+
+    valueU * tmp, *tmp0, *tmp1;
+
+
 	if(!p) return NULL;
 	
 	switch (p->type) {
@@ -157,11 +159,11 @@ valueU* ex(nodeType * p){
                     tmp=ex(p->opr.op[0]);
                     switch(tmp->type){
                             case (t_int):  tmp->ivalue=-tmp->ivalue;
-                            break;
+                            return tmp;
                             case (t_bool): tmp->bvalue=-tmp->bvalue;
-                            break;
+                            return tmp;
                             case (t_real): tmp->rvalue=-tmp->rvalue;
-                            break;
+                            return tmp;
                         }
                 case 'D':
                         if(p->opr.op[0]->id.index->defined){
@@ -203,11 +205,11 @@ valueU* ex(nodeType * p){
                         case'+':
                             switch(tmp->type){
                             case (t_int):  tmp->ivalue=tmp0->ivalue+tmp1->ivalue;
-                            break;
+                            return tmp;
                             case (t_bool): tmp->bvalue=tmp0->bvalue+tmp1->bvalue;
-                            break;
+                            return tmp;
                             case (t_real): tmp->rvalue=tmp0->rvalue+tmp1->rvalue;
-                            break;
+                            return tmp;
                         }
 
                         case'-':

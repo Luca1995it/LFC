@@ -56,12 +56,12 @@ extern int yydebug;
     T_REAL = 266,
     T_BOOL = 267,
     IFX = 268,
-    UMINUS = 269,
-    ELSE = 270,
-    GE = 271,
-    LE = 272,
-    EQ = 273,
-    NE = 274
+    ELSE = 269,
+    GE = 270,
+    LE = 271,
+    EQ = 272,
+    NE = 273,
+    UMINUS = 274
   };
 #endif
 /* Tokens.  */
@@ -76,12 +76,12 @@ extern int yydebug;
 #define T_REAL 266
 #define T_BOOL 267
 #define IFX 268
-#define UMINUS 269
-#define ELSE 270
-#define GE 271
-#define LE 272
-#define EQ 273
-#define NE 274
+#define ELSE 269
+#define GE 270
+#define LE 271
+#define EQ 272
+#define NE 273
+#define UMINUS 274
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED

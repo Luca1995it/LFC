@@ -8,13 +8,13 @@
 %%
 
 
--?[0-9]+"."[0-9]+   {
+[0-9]+"."[0-9]+   {
                         yylval.rValue = atof(yytext);
                         return REAL;
                     }
 
 
--?[0-9]+            {
+[0-9]+            {
                         yylval.iValue = atoi(yytext);
                         return INTEGER;
                     }     
@@ -43,7 +43,7 @@
                     }
 
 
-[-+()<>=*/;{}.]   	{ 
+[+()<>=*/;{}.-]   	{ 
 						return *yytext; 
 					}
 

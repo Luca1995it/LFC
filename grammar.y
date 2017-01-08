@@ -17,12 +17,16 @@
 %token <rValue> REAL
 %token WHILE IF PRINT T_INT T_REAL T_BOOL
 %nonassoc IFX
-%nonassoc UMINUS
 %nonassoc ELSE
 
 %left GE LE EQ NE '>' '<'
 %left '+' '-'
 %left '*' '/'
+
+%nonassoc UMINUS
+
+
+
 
 %type <nPtr> stmt expr type function program
 
@@ -56,11 +60,11 @@ expr:
     									tmp.rvalue = $1;
     									$$ = con(tmp,t_real); 
     								}
-    | expr '+' expr				    { $$ = opr('+',2,$1,$3); }
+    | '-' expr %prec UMINUS         { $$ = opr(UMINUS,1,$2); }                                
+    | expr '+' expr				    { $$ = opr('+',2,$1,$3); }    
     | expr '-' expr				    { $$ = opr('-',2,$1,$3); }
     | expr '*' expr				    { $$ = opr('*',2,$1,$3); }
-    | expr '/' expr				    { $$ = opr('/',2,$1,$3); }
-    | '-' expr %prec UMINUS		    { $$ = opr(UMINUS,1,$2); }
+    | expr '/' expr				    { $$ = opr('/',2,$1,$3); }    
     | expr '<' expr         		{ $$ = opr('<',2,$1,$3); }
     | expr '>' expr         		{ $$ = opr('>',2,$1,$3); }
     | expr GE expr          		{ $$ = opr(GE,2,$1,$3); }
